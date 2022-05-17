@@ -1,8 +1,12 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser').urlencoded({ extended: true })
-const mongoose = require('mongoose')
+const Bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+
+const SECRET_KEY = 'SECRET_KEY'
+
+const db = require('./db')
 
 app.use(express.json())
 
@@ -10,46 +14,79 @@ const cors = require('cors')
 
 app.use(cors())
 
-const schema = mongoose.Schema({
-    name: String,
-    mail: String,
-    password: String
-})
-
-mongoose.connect('mongodb+srv://Armen:1234@cluster0.wscaf.mongodb.net/?retryWrites=true&w=majority/slack-app')
-    .then(() => console.log('Connected to db'))
-    .catch(() => console.log('Some error'))
-
-const model = mongoose.model('users', schema)
-
-app.get('/getUser/:data', async (req, res) => {
-    const { mail, password } = JSON.parse(req.params.data)
-    const mymodel = await model.find({
-        mail: mail,
-        password: password
+const getUserByToken = (token) => {
+    return new Promise((resolve, reject) => {
+        if (token) {
+            const authorization = token
+            let decoded
+            try {
+                decoded = jwt.verify(authorization, SECRET_KEY)
+            } catch {
+                reject ('Token not valid')
+                return
+            }
+            const userId = decoded.id
+            db.user.findOne({ _id: userId })
+                .then(user => resolve(user))
+                .catch(() => reject('Token error'))
+        } else {
+            reject('Token is not found')
+        }
     })
-    res.send(mymodel)
+}
+
+app.post('/getUser', bodyParser, (req, res) => {
+    const { mail, password } = req.body
+
+    if (!mail || !password) {
+        return res.send({ msg: 'err' })
+    }
+
+    db.user.findOne({ mail: mail })
+        .then(user => {
+            if (!user) {
+                return res.send({ msg: 'err' })
+            } else {
+                if (!Bcrypt.compareSync(password, user.password)) {
+                    res.send({ msg: 'err' })
+                } else {
+                    const token = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY)
+                    res.send({ msg: 'ok', user: token })
+                }
+            }
+        }).catch(() => res.send({ msg: 'err' }))
 })
 
-app.post('/addUser', bodyParser, async (req, res) => {
-    if (req.body.mail !== 0 && req.body.password !== 0 && req.body.name !== 0) {
-        await model.find({ mail: req.body.mail }, async (err, data) => {
-            console.log('1')
-            if(err){
-                throw err
-            }
-            if(data.length !== 0){
-                res.send('This mail already used')
-            } else {
-                await model({
-                    name: req.body.name,
-                    mail: req.body.mail,
-                    password: req.body.password
-                }).save()
-                res.send('Registred Successfuly!')
-            }
-        }).catch(err => console.log('err'))
+app.post('/addUser', bodyParser, (req, res) => {
+    const { name, mail, password } = req.body
+
+    if (!name || !mail || !password) {
+        return res.send({ msg: 'err' })
     }
+
+    db.user.findOne({ mail: mail })
+        .then(user => {
+            if (user) {
+                return res.send({ msg: 'err' })
+            } else {
+                db.user.create({
+                    name: name,
+                    mail: mail,
+                    password: Bcrypt.hashSync(password, 10)
+                }).then(user => {
+                    const token = jwt.sign({ id: user._id, mail: user.mail }, SECRET_KEY)
+                    res.send({ msg: 'ok', token: token })
+                }).catch((err) => {
+                    res.send({ msg: 'err' })
+                })
+            }
+        }).catch(() => res.send({ msg: 'err' }))
+})
+
+app.get('/loginedPerson/:token', (req, res) => {
+    getUserByToken(req.params.token)
+        .then(user => res.send({ msg: 'ok', user: user }))
+        .catch(() => res.send({ msg: 'err' }))
 })
 
 app.listen(8080)

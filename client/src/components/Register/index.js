@@ -1,6 +1,6 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { addUser } from "../../services";
+import React from "react"
+import { useForm } from "react-hook-form"
+import { addUser } from "../../services"
 
 const Register = () => {
 
@@ -9,7 +9,7 @@ const Register = () => {
     handleSubmit
   } = useForm();
 
-  const onSubmit = (data) => addUser(data);
+  const onSubmit = (data) => addUser(data)
 
   return (
     <form className="login-form content" onSubmit={handleSubmit(onSubmit)}>
