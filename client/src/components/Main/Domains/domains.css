@@ -1,0 +1,32 @@
+.domains{
+    padding: 15px 0;
+    width: 20%;
+    height: 100vh;
+    border-right: 1px pink solid;
+}
+.domain1{
+    width: 55px;
+    height: 55px;
+    border-radius: 10px;
+    margin: 10px auto;
+    background-color: red;
+}
+.domain2{
+    width: 55px;
+    height: 55px;
+    border-radius: 10px;
+    margin: 0 auto;
+    background-color: red;
+}
+.add-button {
+    background: none;
+    width: 30%;
+    border: none;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+}
+
+#active{
+    border: 3px white solid;
+}

@@ -1,0 +1,27 @@
+.info {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px pink solid;
+}
+.domain-name {
+    text-align: left;
+    font-size: 22px;
+    font-weight: normal;
+}
+
+.user-name {
+    text-align: left;
+    font-size: 18px;
+    font-weight: normal;
+}
+.add-div {
+    color: black;
+    font-size: 27px;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border-radius: 20px;
+    cursor: pointer;
+}

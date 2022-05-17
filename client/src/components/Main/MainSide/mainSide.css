@@ -1,0 +1,6 @@
+.main-side{
+    display: flex;
+    flex-direction: column;
+    color: white;
+    width: 80%;
+}

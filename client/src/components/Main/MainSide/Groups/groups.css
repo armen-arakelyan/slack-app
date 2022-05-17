@@ -1,0 +1,19 @@
+.group {
+    padding: 10px 20px;
+    border-bottom: 1px pink solid;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.sub-group-list {
+    width: 100%;
+    list-style: none;
+    margin-left: 10px;
+}
+.sub-group {
+    text-align: left;
+    padding: 5px 0;
+}
+.sub-group:hover {
+    background-color: #5c5cd3;
+}
