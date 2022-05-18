@@ -6,10 +6,7 @@ const MainSide = () => {
     return(
       <div className="main-side">
         <SelectedDomainInfo />
-        <Groups />
-        <Groups />
-        <Groups />
-        <Groups />
+        <Groups title="Channels" />
       </div>
     )
   }

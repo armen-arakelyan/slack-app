@@ -13,4 +13,9 @@ const schema = mongoose.Schema({
     password: String
 })
 
+const channelsSchema = mongoose.Schema({
+    channels: String
+})
+
 exports.user = mongoose.model('users', schema)
+exports.channels = mongoose.model('channel', channelsSchema)

@@ -6,9 +6,9 @@ import { getUserDataAction } from "../../redux/getUserData/getUserDataAction"
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Store } from 'react-notifications-component'
 import * as yup from 'yup'
 import './style.css'
+import { Notification } from "../../Helpers/Notification"
 
 const schema = yup.object().shape({
   mail: yup.string().required().email(),
@@ -31,21 +31,10 @@ const Login = () => {
   const onSubmit = (data) => {
     getUser(data).then(res => {
       if (res.data.msg === 'err') {
-        Store.addNotification({
-          title: "No such user exists",
-          type: "warning",
-          insert: "top",
-          container: "top-right",
-          animationIn: ["animate__animated", "animate__fadeIn"],
-          animationOut: ["animate__animated", "animate__fadeOut"],
-          dismiss: {
-            duration: 2000,
-            onScreen: true
-          }
-        })
+        Notification('No such user exists', 'warning')
       }
       dispatch(getDataAction(res))
-    })
+    }).catch(() => Notification('Wrong Password', 'warning'))
   }
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-export default function deepCopy (objectpassed) {
+const deepCopy = (objectpassed) => {
 if (objectpassed === null || typeof objectpassed !== 'object') {
     return objectpassed
 }
@@ -10,3 +10,5 @@ for (const key in objectpassed) {
 }
 return temporaryStorage
 }
+
+export default deepCopy

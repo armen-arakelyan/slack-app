@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form"
 import { addUser } from "../../services"
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Store } from "react-notifications-component"
+import { Notification } from "../../Helpers/Notification"
 
 const Register = () => {
   const schema = yup.object().shape({
@@ -25,32 +25,10 @@ const Register = () => {
     addUser(data)
       .then(res => {
         if (res.data.msg === 'ok') {
-          Store.addNotification({
-            title: "User successfuly registered!",
-            type: "success",
-            insert: "top",
-            container: "top-right",
-            animationIn: ["animate__animated", "animate__fadeIn"],
-            animationOut: ["animate__animated", "animate__fadeOut"],
-            dismiss: {
-              duration: 2000,
-              onScreen: true
-            }
-          })
+          Notification('User successfuly registered!', 'success')
           setTimeout(() => window.location.reload(), 2000)
         } else {
-          Store.addNotification({
-            title: "User alredy registered!",
-            type: "warning",
-            insert: "top",
-            container: "top-right",
-            animationIn: ["animate__animated", "animate__fadeIn"],
-            animationOut: ["animate__animated", "animate__fadeOut"],
-            dismiss: {
-              duration: 2000,
-              onScreen: true
-            }
-          })
+          Notification('User alredy registered!', 'warning')
         }
       })
   }

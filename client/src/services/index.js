@@ -7,3 +7,7 @@ export const getUser = (data) => axios.post(`${URL}/${'getUser'}`, data)
 export const addUser = (data) => axios.post(`${URL}/addUser`, data)
 
 export const loginedPerson = (data) => axios.get(`${URL}/loginedPerson/${data}`)
+
+export const addChannel = (data) => axios.put(`${URL}/addChannel/${data}`)
+
+export const getChannels = () => axios.get(`${URL}/getChannels`)

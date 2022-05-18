@@ -5,15 +5,52 @@
     flex-direction: column;
     align-items: flex-start;
 }
+
 .sub-group-list {
     width: 100%;
     list-style: none;
     margin-left: 10px;
 }
+
 .sub-group {
     text-align: left;
     padding: 5px 0;
 }
+
 .sub-group:hover {
     background-color: #5c5cd3;
+}
+
+.group-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.add-button {
+    font-size: 20px;
+}
+
+.channel-add-action {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.channel-add-action input {
+    border: none;
+    border-bottom: 1px solid #9e9e9e;
+    height: 10%;
+    width: 100%;
+    padding: 10px 10px;
+    outline: none;
+    font-size: 16px;
+    transition: 0.5s;
+    background: none;
+    color: white;
+}
+
+.channel-add-action button {
+    height: 50%;
+    background-color: red;
 }
