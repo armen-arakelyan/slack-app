@@ -146,4 +146,15 @@ app.put('/addChannel/:channel', (req, res) => {
   }).catch(() => res.send({ msg: 'err' }))
 })
 
+app.put('/updateChannel/:channel/:updatedChannel', (req, res) => {
+  db.channels.findByIdAndUpdate(req.params.channel, { channels: req.params.updatedChannel })
+    .then(channel => res.send({ msg: 'ok', data: channel }))
+    .catch(() => res.send({ msg: 'err' }))
+})
+
+app.delete('/removeChannel/:id', async (req, res) => {
+  const data = await db.channels.findByIdAndDelete(req.params.id)
+  res.send(data.length === 0 ? { msg: 'err' } : { msg: 'ok', data: data })
+})
+
 app.listen(8080);
