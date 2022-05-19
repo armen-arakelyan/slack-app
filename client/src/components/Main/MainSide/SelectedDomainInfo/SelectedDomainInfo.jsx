@@ -6,7 +6,10 @@ const SelectedDomainInfo = () => {
   const [openedDropdown, setOpenedDropdown] = useState(false);
   const userData = useSelector((state) => state.userData);
 
-  const logOut = () => localStorage.removeItem('user')
+  const logOut = () => {
+    localStorage.removeItem('user')
+    localStorage.removeItem('refresh')
+  }
 
   return (
     <div className="info">

@@ -1,67 +1,73 @@
-import React, { useEffect, useLayoutEffect } from "react"
-import { useForm } from "react-hook-form"
-import { getUser, loginedPerson } from "../../services"
-import { getDataAction } from "../../redux/getData/getDataAction"
-import { getUserDataAction } from "../../redux/getUserData/getUserDataAction"
-import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import './style.css'
-import { Notification } from "../../Helpers/Notification"
+import React, { useEffect, useLayoutEffect } from "react";
+import { useForm } from "react-hook-form";
+import { getUser, loginedPerson } from "../../services";
+import { useDispatch, useSelector } from "react-redux";
+import { getDataAction } from "../../redux/getData/getDataAction";
+import { useNavigate } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import "./style.css";
+import { Notification } from "../../Helpers/Notification";
 
 const schema = yup.object().shape({
   mail: yup.string().required().email(),
-  password: yup.string().required().min(6)
-})
+  password: yup.string().required().min(6),
+});
 
 const Login = () => {
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const userData = useSelector(state => state.data)
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const userData = useSelector((state) => state.data);
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
-    resolver: yupResolver(schema)
-  })
+    resolver: yupResolver(schema),
+  });
 
   const onSubmit = (data) => {
-    getUser(data).then(res => {
-      if (res.data.msg === 'err') {
-        Notification('No such user exists', 'warning')
-      }
-      dispatch(getDataAction(res))
-    }).catch(() => Notification('Wrong Password', 'warning'))
-  }
+    getUser(data)
+      .then((res) => {
+        if (res.data.msg === "err") {
+          Notification("No such user exists", "warning");
+        } else {
+          window.location.reload()
+        }
+        dispatch(getDataAction(res));
+      })
+      .catch(() => Notification("Wrong Password", "warning"));
+  };
 
   useEffect(() => {
-    if (typeof userData === 'string') localStorage.setItem('user', userData)
-  }, [userData])
+    if (typeof userData.user === "string") {
+      localStorage.setItem("user", userData.user);
+      localStorage.setItem("refresh", userData.refresh);
+    }
+  }, [userData]);
 
   useLayoutEffect(() => {
-    const data = localStorage.getItem('user')
-    loginedPerson(data)
-      .then(res => {
-        if (res.data.msg === 'ok') {
-          dispatch(getUserDataAction(res.data.user))
-          navigate('feed')
-        }
+    loginedPerson()
+      .then((res) => {
+        if (res.data) navigate("feed");
       })
-      .catch(err => console.log('err', err))
-  }, [navigate, dispatch])
+      .catch((err) => console.log("err", err));
+  }, [navigate])
 
   return (
     <form className="login-form content" onSubmit={handleSubmit(onSubmit)}>
       <div className="input-field">
-        <input {...register('mail', { required: true }) } type="email" placeholder="Email" />
+        <input
+          {...register("mail", { required: true })}
+          type="email"
+          placeholder="Email"
+        />
         <p className="error-message">{errors.mail?.message}</p>
       </div>
       <div className="input-field">
         <input
-          {...register('password', { required: "Please enter your password." }) }
+          {...register("password", { required: "Please enter your password." })}
           type="password"
           placeholder="Password"
         />
@@ -69,7 +75,7 @@ const Login = () => {
       </div>
       <button className="form-submit">Login</button>
     </form>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

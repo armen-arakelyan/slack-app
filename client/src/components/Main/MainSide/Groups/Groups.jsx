@@ -95,7 +95,7 @@ const Groups = ({ title }) => {
                       setUpdatedData(e.target.value);
                   }}
                 />
-                <p onClick={() => onUpdateChannel(channel._id)}>&#10003;</p>
+                <p className="update-btn-successfuly" onClick={() => onUpdateChannel(channel._id)}>&#10003;</p>
               </>
             ) : (
               <>
