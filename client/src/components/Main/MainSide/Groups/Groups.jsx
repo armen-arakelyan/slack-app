@@ -1,34 +1,37 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getChannelsAction,
   removeChannelAction,
-  updateChannelAction
+  updateChannelAction,
 } from "../../../../redux/Channels/ChannelsAction";
 import {
   getChannels,
   addChannel,
   removeChannel,
-  updateChannel
+  updateChannel,
 } from "../../../../services";
+import { generateChannelName } from "./helpers/generateChannelName";
 import "./groups.css";
 
 const Groups = ({ title }) => {
   const dispatch = useDispatch();
   const channels = useSelector((state) => state.channels);
   const [showAdd, setShowAdd] = useState(false);
-  const [showUpdatedLabel, setShowUpdatedLabel] = useState('');
+  const [showUpdatedLabel, setShowUpdatedLabel] = useState("");
   const [showActions, setShowActions] = useState("");
   const [channelValue, setChannelValue] = useState("");
   const [updatedData, setUpdatedData] = useState("");
+  const [generatedChannelName, setGeneratedChannelName] = useState("");
 
   const onAddChannel = () => {
-    addChannel(channelValue)
+    addChannel(channelValue || generatedChannelName)
       .then((res) => {
         dispatch(getChannelsAction(res.data.data));
         setShowAdd(false);
         setChannelValue("");
-      }).catch((err) => console.log("ERR", err));
+      })
+      .catch((err) => console.log("ERR", err));
   };
 
   const onRemoveChannel = (id) => {
@@ -38,7 +41,7 @@ const Groups = ({ title }) => {
   };
 
   const onUpdateChannel = (id) => {
-    setShowUpdatedLabel('')
+    setShowUpdatedLabel("");
     if (updatedData.length > 0) {
       updateChannel(id, updatedData)
         .then((res) => dispatch(updateChannelAction(res.data, updatedData)))
@@ -46,11 +49,15 @@ const Groups = ({ title }) => {
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     getChannels()
       .then((res) => dispatch(getChannelsAction(res.data)))
       .catch((err) => console.log("ERR", err));
   }, [dispatch]);
+
+  useEffect(() => {
+    setGeneratedChannelName(generateChannelName(channels));
+  }, [channels]);
 
   return (
     <div className="group">
@@ -65,7 +72,7 @@ const Groups = ({ title }) => {
         className="channel-add-action"
       >
         <input
-          placeholder="Channel Name"
+          defaultValue={generatedChannelName}
           onChange={(e) => setChannelValue(e.target.value)}
         />
         <p onClick={onAddChannel} className="channel-add-btn">
@@ -79,16 +86,20 @@ const Groups = ({ title }) => {
             onMouseLeave={() => setShowActions("")}
             className="sub-group"
           >
-            {showUpdatedLabel ? (
+            {showUpdatedLabel === channel._id ? (
               <>
-                <input defaultValue={channel.channels} onChange={(e) => {
-                  if (channel.channels !== e.target.value) setUpdatedData(e.target.value)
-                }} />
+                <input
+                  defaultValue={channel.title}
+                  onChange={(e) => {
+                    if (channel.title !== e.target.value)
+                      setUpdatedData(e.target.value);
+                  }}
+                />
                 <p onClick={() => onUpdateChannel(channel._id)}>&#10003;</p>
               </>
             ) : (
               <>
-                <p>{channel.channels}</p>
+                <p>{channel.title}</p>
                 <div
                   style={{
                     display: showActions === channel._id ? "flex" : "none",

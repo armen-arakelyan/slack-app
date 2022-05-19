@@ -14,7 +14,7 @@ const schema = mongoose.Schema({
 })
 
 const channelsSchema = mongoose.Schema({
-    channels: String
+    title: String
 })
 
 exports.user = mongoose.model('users', schema)

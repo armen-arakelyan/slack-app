@@ -15,7 +15,7 @@ const getChannelsReducer = (state = initialState, action) => {
         case UPDATE_CHANNEL_ACTION:
             newState = action.payload.channel.msg === 'ok' ? newState.map(v => {
                 if (v._id === action.payload.channel.data._id) {
-                    v.channels = action.payload.newData
+                    v.title = action.payload.newData
                 }
                 return v
             }) : newState

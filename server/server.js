@@ -140,14 +140,14 @@ app.get('/getChannels', async (req, res) => {
 
 app.put('/addChannel/:channel', (req, res) => {
   db.channels.create({
-    channels: req.params.channel
+    title: req.params.channel
   }).then(channel => {
     res.send({ msg: 'ok', data: channel })
   }).catch(() => res.send({ msg: 'err' }))
 })
 
 app.put('/updateChannel/:channel/:updatedChannel', (req, res) => {
-  db.channels.findByIdAndUpdate(req.params.channel, { channels: req.params.updatedChannel })
+  db.channels.findByIdAndUpdate(req.params.channel, { title: req.params.updatedChannel })
     .then(channel => res.send({ msg: 'ok', data: channel }))
     .catch(() => res.send({ msg: 'err' }))
 })
